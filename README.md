@@ -41,7 +41,52 @@ A good practice would be to create new account for DEV, TEST, PROD.
      * e.g. if ALL EC2 instances want access to s3 bucket, you'll pick this identity.
   
  #### Policies
-  Objects or docs used to allow or deny access to AWS Services when attached to an Identity type ( user, group, role)
+  Objects or docs used to allow or deny access to AWS Services when attached to an Identity type ( user, group, role). 
   
- 
-  
+ #### Access Keys
+  A way to login from cli or APIs. They are form from 2 parts, Access Key _ID_ and _Secret_ Access Key.
+     * _Secret_ : Can only be seen when created (works as password SECURE IT!)
+  * IAM users can have access keys (up to 2) without a password (or both).
+  * Actions include:
+     * Creation
+     * Deletion
+     * Made Inactive
+     * made Active
+     
+## Cloud Computing 
+(evaluate how the serv matches with this cats)
+1. On-Demand Self-Service: 
+   * Can provision capabilities as needed **_without requiring human interaction_**
+2. Broad Network Access: 
+   * Capabilities are available over the network and accessed through **_standard mechanisms_** (http/s, ssh, rdp, vpn) (private network link - NOT CLOUD)
+3. Resource Pooling
+   * There is a sense of **_location independence_**. No control or knowledge over the exact _**location**_ of the resources
+   * Resources are **_pooled_** to serve multiple consumers using a **_multi-tenant model_**
+   
+    SUM: Economies of scale, cheaper service.
+4. Rapid Elasticity
+   * Capabilities can be **_elastically provisioned_** and **_released_** to scale _**rapidly**_ outward and inward with demand.
+   * To the consumer, the capabilities available for provisioning often _**appear**_ to be _**unlimited**_
+   
+   SUM: Scales up/down auto in response to systemLoad
+5. Measured Service:  
+   * Resource usage can be **_monitored, controlled, reported_**, and **_BILLED_**
+   
+   SUM: Usage is measured, pay what you consume.
+
+Source: 800-145 NIST
+
+ ### Cloud Types - Public/Private/Multi/Hybrid
+ 1. **Public**:  
+    Complies with 5 Cloud Computing points (CCP) and is available to everyone using only 1 vendor.
+    * Multi-cloud: Used different services of different vendors.  
+        * Vendors: AWS, AZURE, GOOGLE
+ 2. **Private**:  
+    Dedicated to your business and run from business premises and **still complying with the 5 CCP.**  
+    **If it doesn't comply with CCP it would really be _Hybrid ENVIRONMENT/NETWORK_**  
+    i.e. Connecting onPremisse DataCenter with PublicCloud.  
+       * Vendor's Solution: Outposts, Stack, Anthos
+ 3. _**Hybrid?**_:  
+ Used public/private in conjuction     
+        
+        
