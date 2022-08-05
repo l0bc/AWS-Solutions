@@ -88,5 +88,13 @@ Source: 800-145 NIST
        * Vendor's Solution: Outposts, Stack, Anthos
  3. _**Hybrid?**_:  
  Used public/private in conjuction     
-        
+ 
+ ### Cloud Service Models (XaaS)
+ When deploying an application anywhere an **_Infrastructure Stack_**:  
+ Collection of things that an application needs.  
+ From bottom up:
+ 
+ 
+ 
+ 
         
