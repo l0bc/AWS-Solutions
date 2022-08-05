@@ -92,9 +92,39 @@ Source: 800-145 NIST
  ### Cloud Service Models (XaaS)
  When deploying an application anywhere an **_Infrastructure Stack_**:  
  Collection of things that an application needs.  
- From bottom up:
+ From bottom up:  
+ ![alt Stack](https://raw.githubusercontent.com/l0bc/AWS-Solutions/main/resources/infStack.png)
+ There are parts **YOU** mange and others the **VENDOR**  
+ Unit of consumption: A part of the stack and up where **you** manage and there for pay. 
  
+ For example: a DC hosting the vendor will only manage the **Facility** of the stack
  
+ #### Types of aaS  
+ 1. **IaaS**  
+ Infrastructure as a Service.  
+ * _unit of consumption_: OS up.
+ * Vendor Management: "infrastructure" (Thais is everything up to Virtualization).
+    * i.e. EC2
+ 2. **PaaS**  
+ Platform as a Service.  
+ * _unit of consumption_: Runtime up.
+ * Vendor Management: From Container down.  
+    * i.e. Python app. Vendor would manage everything up to a pythonDocer container. (manly for devs)
+ 3. **SaaS**  
+ Software as a Service.
+ * _unit of consumption_: Only Application.
+ * Vendor Management: Everything below Application, data, runtime,...
+    * i.e. Netflix.
+    
+    
+ ### YAML  
+ Human readable data serialization language (key:value)  
+ The indentation MATERS a lot. A docker-compose.yml is a very good example.  
+ NOTE: when a **key:value** pair has more than one key:value pair with indentation(differenced from hiphens), it's called Dictionary (unordered list).
  
+ ### JSON
+ Lightweight data-interchange format (human readable and esay for machine parse)  
+ **JSON** = **YAML**
+ Object = Dictionary  
+ Array = List  
  
-        
