@@ -128,3 +128,21 @@ Source: 800-145 NIST
  Object = Dictionary  
  Array = List  
  
+ 
+ ### NETWORKING  
+ TCP/IP 7 LAYERS PROTOCOL  
+ Important, aws uses PAT NATTING or NATGatewya; MANYtoONE and uses sourcePorts to locate the private IPs when arrives to router.  
+ 
+ 
+ ## AWS FUNDAMENTALS
+ ### Public vs Private Services  
+ Network is what matters, what can be accessed and from where
+ * **Public**:  
+ The PUBLIC is the one that can reach this networks  (everyone)
+ * **Private**:  
+ Uses VPCs: Isolated unless configured otherwise
+ * **AWS Public Zone**: Network connected to the internet for public services, like s3.
+ ## AWS GLOBAL INFRASTRUCTION  
+ Check my .odt file of all this info: REGION > AZ (is like a DataCenter) > EDGE (like cache storaging or replication) 
+    * Side thinking... If someone has services in different regions, maybe the conf in another region will be different.  
+ * Region: Region Code (us-east-1), and Region Name (N.Vriginia)
