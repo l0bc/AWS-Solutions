@@ -146,3 +146,22 @@ Source: 800-145 NIST
  Check my .odt file of all this info: REGION > AZ (is like a DataCenter) > EDGE (like cache storaging or replication) 
     * Side thinking... If someone has services in different regions, maybe the conf in another region will be different.  
  * Region: Region Code (us-east-1), and Region Name (N.Vriginia)
+ 
+
+ ## VPCs  
+ Within 1 account & 1 region.  
+ REGIONAL Resilient (see the AWS fundamentals.  
+ Private and Isolated,  unless you dicide otherwise.  
+ Types:  
+ * Default VPC  
+ Best practices will create de Default VPC but not used on anything Production related (some services demand to have the defaultVPC)
+    * Can only have 1  default VPC per REGION (can be deleted and recreatd)
+    * VPC CIDR - 172.31.0.0/16
+    * Subnets to every AZ existing on the region.
+    * ![VPCs defualtInfra](https://user-images.githubusercontent.com/31637504/183339619-2c0fea49-2e6f-496e-b797-2e51cb093946.png)
+    * Has Internet Gateway(IGW), Security Group & NACL(networkACL)
+    * subnets have public ipv4.
+    
+
+ * Custom VPC  
+    * Customaze everything in detail. by default is going to be completely isolated/private.
