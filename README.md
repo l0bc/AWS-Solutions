@@ -199,3 +199,11 @@ Source: 800-145 NIST
  * Block Device Mapping  
  File that maps, identificates volumes mounted
     * Linux: /etc/fstab
+## s3 Storage Basics  
+Globa Storage Platform - regional based/resilient.  
+Public service, unlimited data & multi-user.  
+Perfecto for almos any data type; movies, audio, photos, text, large data sets...  
+Delivers:  
+* Objects - wecould say like _file_
+   * Value: 0 - 5 TB
+* Buckets - we could say like _directory_
