@@ -165,3 +165,37 @@ Source: 800-145 NIST
 
  * Custom VPC  
     * Customaze everything in detail. by default is going to be completely isolated/private.
+ ## EC2 - Elastic Compute Cloud  
+ Default starting point for computer requirements.  
+ #### Key Facts  
+ * IaaS - Provides Instances (VM) 
+ * Private VPC by-default. (on defaultVPC)
+    * AZ Resilient - If AZ fails, instance fails
+ * On-demand Billing (per second/hour)
+    * Storage
+       * localhost storage
+       * Elastic Block Store (EBS)
+    * CPU,RAM consumption
+    * Extras; commercial software.
+ * Lifecycle - states
+    * Running; can jump between stopped & terminated. If terminated, the Instance **WILL BE DELETED**
+       * Will charge you on EVERYTHING (Storage, RAM, CPU, Network Traffic)
+    * Stopped
+       * Charges on: Storage.
+    * Terminated
+       * No charges, but deletes info.
+ * Amazon Machine Image (AMI)  
+ Like bootable usbs, or preConfigured images on HypV.  
+ Can create EC2s from AMI or create AMI from EC2.  
+ *  Permissions:
+    * Public - everyone (windows/linux ec2 are on this group.)
+    * Owner - Implicit (If I'm owner of AMI I can create Instances on it for me,)
+    * Explicit - specific aws accounts grant.
+ * Root Volume  
+ Contains the boot volume of the Instance
+    * Windows: c:\
+    * Linux: / (root)  
+ Will always exists (can have more than 1 disk/partition mounted).  
+ * Block Device Mapping  
+ File that maps, identificates volumes mounted
+    * Linux: /etc/fstab
