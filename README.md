@@ -200,10 +200,41 @@ Source: 800-145 NIST
  File that maps, identificates volumes mounted
     * Linux: /etc/fstab
 ## s3 Storage Basics  
-Globa Storage Platform - regional based/resilient.  
+Global Storage Platform - regional based/resilient.  
 Public service, unlimited data & multi-user.  
 Perfecto for almos any data type; movies, audio, photos, text, large data sets...  
 Delivers:  
 * Objects - wecould say like _file_
-   * Value: 0 - 5 TB
+   * Key: like fileName
+   * Value: **0 - 5 TB**
 * Buckets - we could say like _directory_
+   * Restrictions:
+      * 3 to 63 characters; all lower case, no underscores
+      * start with lowercase letter or number
+      * Cannot be IP formated, e.g. 1.1.1.1 
+      * 100 soft limit per account
+      * 1000 hard limit ( by contatcting support can increase up to 1000 buckets) per account.
+   * Created on specific AZ. And has primary location on it.
+   * Blast Radius = Region.
+      * If major failure occurs (natural disaster, huge data corruption) the error will be contained only in that region.
+   * Name need to be **Globally Unique** (cannot exist the same name ANYWHERE including other aws accounts)
+   * Inifinite scalabe storage system.
+   * Flat structure: Everything have the same level (folders don't really exist, eventhough the UI will represent some folders with data inside )
+      * Folders are really refer as prefexes of files. (i.e. /old/foo.jpg)
+* Patterns & antiPatterns  
+Is an **object store**. NOT FILE (e.g. networkFile System) or BLOCK - (essentially virtual hardDrives(can be mounted)e.g. EBS).
+   * Great for _offload_  
+   e.g. If have blog with a lot of files, this is a great choice.
+   * Think s3 is best for I/O of AWS products.
+
+## Cloud Formation BASICS  
+Tool to create/update/delete infrastructure in consistent and repetible ways by creating templates.  
+Written in YAML or JSON.  
+Every template has Resources and _all other things that will be seen in detail after_
+* Resource
+   * Is a list of resources called: *_logical Resource_*
+      * The logical Resource has *_Type_* and *_Properties_*
+      * The Type has its own formatting and will instruct what kind of good will be created (ec2, s3, ...)
+   * Template will create a STACK for every Resource.
+   * The Stack will create the matching Physical Resources; actually creating the goods. 
+      * If the template if modified/deleted, then the stack will match the template and will implement the actions to pythisical Resources.
