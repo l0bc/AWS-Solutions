@@ -261,3 +261,39 @@ There are 3 main products in one
 **NameSpaces**: A way to organize data collected by cloudWatch. Can be viewed as container/folder.  
 Every AWS service will create its own _nameSpace_ in the form of: **AWS/service**.  
 By association/heritacy the AWS nameSpace is reserved to automatically created AWS services.
+
+## Shared Responsability Model  
+Like X as a Service template(aaS) but security wise.  
+![Capture d’écran du 2022-08-12 18-52-45](https://user-images.githubusercontent.com/31637504/184406532-fe09303e-0642-4318-9a7e-c6e85d38ae71.png)  
+NOTES RELATED TO PHOTO:  
+   * **AWS**: 
+      * _Software_: It's refering to the Hypervisor,UI that administrates the Instance (e.g. EC2).  
+## HighAvailability(HA) vs FaultTolerance(FT) vd DisasterRecovery(DR)  
+* **HA**, _Ensures_ an agreed level of operational _performance_(_uptime_), for a _higher than normal period_).
+   * Design to be providing services and be fixed as OFTEN as possible. (i.e. If systems fails but are quickly fixed it's still an HA Service).
+   * 99,9% threshold to be categorized as HA (8.77 hours/year)
+   * 99,999% (5.26 hours/year)
+   * Some solutions could by redundance,when having, for example, 2 servers. A lower exmaple could be the reconfiguration of Root switch when 1st root dies.
+* **FT**, Property than enables a system to _continue operating properly_ in the event of the _failure of some_ of its _components_.
+   * So we can say that its like HA but without a second of downtime.  
+   An example could be: HA would be a heart transplant; there's a moment that the body is really dead ( seconds between the swapping of hearts).  
+   FT would be a brain surgery; there can be NO ERROR, the person needs to be still giving words to ensure congivity, work...  
+* **DR**: Set of policies, tools and procedures to _enable the recovery_ or _continuation_ of _ vital_ thechnology infrastructure and systems _following a natural or human-induced disaster_. (i.e. ROLLBACK(snapshots?)).  
+It is composed by 2 primary things:
+   * **_Pre-planning_**:  
+      1. Having standby premises ready for example  
+      2. Having extra hardware ready to go.  
+      3. Creating Backups (snapshots)
+   *  **_DR Process_**:  
+      1. If fails can toggle cloud solution for example.  
+      2. Implementing extra hardware when needed.  
+      3. NOT BEEING IN THE SAME PREMISE AS PRE-PLANNING!
+## DNS 101  
+Discovery Service.
+Its huge and has to be distributed (the herierchy of DNS NSes).  
+DNS ROOT SERVERS (only 13 SRVs CLUSTERS A-M) and managed by IANA.  
+DNS ZONE FILE: we can think of it as the main URL (i.e. amazon.com).  
+   * This file will have **RECORDS**=_subURLs_ (i.e. aws.amazon.com | www.amazon.com...) 
+   * ACTUALLY the DNS clients doesn't talk to the NS, there's a software called RESOLVER( only function; queries the NS).
+      * Has Root Hints (thats how the resolver can find the nameServers (root ones; from there the root srvs will guide you down if not found)
+   * The file is stored in NS (NameServer)
