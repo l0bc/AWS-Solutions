@@ -291,9 +291,28 @@ It is composed by 2 primary things:
 ## DNS 101  
 Discovery Service.
 Its huge and has to be distributed (the herierchy of DNS NSes).  
+   * Key words,
+      *  _authoritative| authority_ equals something that is trusted.
+         * Only the root (or first NS contacted will be the authority)
+      * Walking the tree: when it recurses the tree by the NS until arriving to the answer wanted.
 DNS ROOT SERVERS (only 13 SRVs CLUSTERS A-M) and managed by IANA.  
 DNS ZONE FILE: we can think of it as the main URL (i.e. amazon.com).  
    * This file will have **RECORDS**=_subURLs_ (i.e. aws.amazon.com | www.amazon.com...) 
    * ACTUALLY the DNS clients doesn't talk to the NS, there's a software called RESOLVER( only function; queries the NS).
-      * Has Root Hints (thats how the resolver can find the nameServers (root ones; from there the root srvs will guide you down if not found)
+      * Has **_Root Hints_** (thats how the resolver can find the nameServers (root ones; from there the root srvs will guide you down if not found)
    * The file is stored in NS (NameServer)
+Top level domains(TLDs) are the 2nd part of the address (.com/.org/.io...)
+   * Can be known also as cctld (country codeTLD; mx/fr/uk/...)
+## ROUTE 53 BASICS   
+It register domains, host zone files to ( on managed NS), and is GLOBALLY Resilient.   
+**PIR** = Organization that manages .org
+STEPS when registering domain by Route 53:
+   1. Service speacks with TLD srv to seee if domain exists.
+   2. Service creates zoneFile (example.org) and allocates the file in AWS mangaged NSs. (normally 4 by zone). 
+   3. Service talks again with the TLD and adds the nameServerRecords (NSR) to the TLDs.  
+#### ZONES (HostedZones in AWS = ZoneFiles)
+Create and manage ZoneFiles. 
+It will be hosted on 4 managed servers.  
+Can be **public** or **private**. The information are records ( DNS records are the urls we are familiar with ( there are other ones too but will be seen later.)
+
+
