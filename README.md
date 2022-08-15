@@ -301,10 +301,14 @@ DNS ZONE FILE: we can think of it as the main URL (i.e. amazon.com).
    * ACTUALLY the DNS clients doesn't talk to the NS, there's a software called RESOLVER( only function; queries the NS).
       * Has **_Root Hints_** (thats how the resolver can find the nameServers (root ones; from there the root srvs will guide you down if not found)
    * The file is stored in NS (NameServer)
-Top level domains(TLDs) are the 2nd part of the address (.com/.org/.io...)
+Top level domains(TLDs) are the 2nd part of the address (.com/.org/.io...) and managed by REGISTRY
    * Can be known also as cctld (country codeTLD; mx/fr/uk/...)
-## ROUTE 53 BASICS   
+## ROUTE 53 BASICS  
+There are 13 ROOT servers.
 It register domains, host zone files to ( on managed NS), and is GLOBALLY Resilient.   
+**Authoritative answer** = the query record we where looking for came from the DNS tree. (result...)
+**Non-Authoritative answer** = record retrieve from the Resolver's cache. 
+**TTL** = The time (in seconds) where the records will be saved on Resolver's cache.
 **PIR** = Organization that manages .org
 STEPS when registering domain by Route 53:
    1. Service speacks with TLD srv to seee if domain exists.
@@ -315,4 +319,33 @@ Create and manage ZoneFiles.
 It will be hosted on 4 managed servers.  
 Can be **public** or **private**. The information are records ( DNS records are the urls we are familiar with ( there are other ones too but will be seen later.)
 
+#### Records  
+There are different types of DNS records. Some of them are,
+   * **NameServer**: Files to be able to delegate trust between servers on the DNS TreeNetwrok
+   * **A** or **AAAA**: its a host to IP record. **A** maps to IPv4 **AAAA** maps to IPv6
+   * **CNAME**: HOst to Host records. Canonical records whos function is to decrease A records. If you have different protocols and want to map them yo DNS (i.e. ftp/mail/smtp) CNAME records are created and mapped to an A/AAAA record (cannot be mapped to IP). If the A/AAAA Record is updated, the cname will not be affected and will also be updated.
+   * **MX**: Record used more common on smtp (mail). Record's example would be: MX 10 gooMail.
+      * The number of the record is a priority, used when more than 1 MX record exist in the Zone's records. The requester will choose the record with the lowest number (higher priority), if the server doesn't respond, i chooses the 2nd one.
+      * A MX record can point to a completely unique DNS record (it isn't constrained to the Zone)
+   * **TXT**: To prove domain ownership. Maybe an authority will ask you for a string. If that string exists (the authority will query a TXT record on your zone) then the authority will accept that you are the owner. 
 
+## IAM Identity POLICIES  
+Set of security settings for AWS. Grants or Denies and created in JSON.  
+Statements: can be 1+. Divided by curly braers.  
+There are 2 ways of incororating Policies; Inline Policies or Managed policies. Same structure as CSS inline <style> tag or using a css file or using the tag as global.  
+ The inline policy is used when a exepltoinal/special policy will be given to user/application.
+![IdentityPolicyExample](https://user-images.githubusercontent.com/31637504/184577448-5620d342-ecba-463a-89f0-f14198def88a.png)  
+_**Components**_:
+   * _Sid_" Statement Id. (optional but always preferable to use)
+   * _Action_: can have 1 or more action, could be as wide or as detailed as you want.
+      * Specific action
+      * wild card
+      * list of specific actions.
+   * _Resource_: Just like actions ( in formating ) but talks about resources in AWS
+   * _Effect_: Allow/Deny. The resources and Actions it had matched.
+_**Priorities**_  
+When overlapping the priorities are as followed:
+   1. Explicit DENY
+   2. Explicit ALLOW
+   3. Defualt DENY (IMPLICIT). 
+_we can say its a deny all infra. and after you can give allows to unlock permissions (but an explicit deny will have higher priority)_.  
