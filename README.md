@@ -21,7 +21,7 @@ A good practice would be to create new account for DEV, TEST, PROD.
  
  
  
-### **IAM BASICS**
+## **IAM BASICS**
  * Using "least privilege access" account ( create accounts for almost any service/user); grant ONLY permissions that the account needs, nothing more.
  * Every AWS account has its own IAM DB but
      * It is a global resilience service: Data is replicated in all different regions. 
@@ -333,19 +333,36 @@ There are different types of DNS records. Some of them are,
 Set of security settings for AWS. Grants or Denies and created in JSON.  
 Statements: can be 1+. Divided by curly braers.  
 There are 2 ways of incororating Policies; Inline Policies or Managed policies. Same structure as CSS inline <style> tag or using a css file or using the tag as global.  
- The inline policy is used when a exepltoinal/special policy will be given to user/application.
+The inline policy is used when a exepltoinal/special policy will be given to user/application.  
 ![IdentityPolicyExample](https://user-images.githubusercontent.com/31637504/184577448-5620d342-ecba-463a-89f0-f14198def88a.png)  
 _**Components**_:
-   * _Sid_" Statement Id. (optional but always preferable to use)
+   * _Sid_: Statement Id. (optional but always preferable to use)
    * _Action_: can have 1 or more action, could be as wide or as detailed as you want.
       * Specific action
       * wild card
       * list of specific actions.
    * _Resource_: Just like actions ( in formating ) but talks about resources in AWS
-   * _Effect_: Allow/Deny. The resources and Actions it had matched.
-_**Priorities**_  
-When overlapping the priorities are as followed:
-   1. Explicit DENY
-   2. Explicit ALLOW
-   3. Defualt DENY (IMPLICIT). 
-_we can say its a deny all infra. and after you can give allows to unlock permissions (but an explicit deny will have higher priority)_.  
+   * _Effect_: Allow/Deny. The resources and Actions it had matched.  
+   _**Priorities**_:   
+   When overlapping the priorities are as followed:
+      1. Explicit DENY
+      2. Explicit ALLOW
+      3. Defualt DENY (IMPLICIT). 
+   _we can say its a deny all infra. and after you can give allows to unlock permissions (but an explicit deny will have higher priority)_.  
+ 
+ ### IAM Users  
+ Identity used for anything requiring LONG-TERM aws access (.e.g. Humans, apps or service accounts).  
+ _Principle_ : Entity trying to access an AWS account. A _principle_ can be people, app, service, or a group of those.
+    * It needs to be **authenticated** by IAM and then IAM will **authorize** the action that the principle can do.  
+ Amazon Resource Name (ARN) allow to refer to a single or multiple resource within ANY AWS account(formatting is similar to IPv6 as you can see).  
+ ![image](https://user-images.githubusercontent.com/31637504/184632402-81b88f7d-6064-4c67-8246-6911b89c531d.png)  
+ 
+ _**keyValues**_:
+    * max 5 000 IAM Users per account.
+    * 1 IAM User can be member of 10 groups.
+    * Could impact system design
+       * Internet-scale apps ( number of users )
+       * Large orgs | org merges.
+       * _there exists solutions for this with roles or Identity Federation._
+
+ 
