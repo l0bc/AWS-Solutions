@@ -385,4 +385,46 @@ It can be used for "temporary" basis; something becomes that role for a period o
  Roles have 2 types of policies:  
    * **_Trust Policy_**: Controls which identities can assume the role. Can reference user, roles, or SERVICES (like EC2 ) in or out the AWS Account.  
       * It will create temporary Credentials to uers assuming the role (time limited). Created by STS ( SecureTokenService _[sts:AssumeRole]_).  
-   * **_ Permissions Policy_**: The temporary credentials are the ones that are linked to the Permissions Policy. Uses to authorize. 
+   * **_Permissions Policy_**: The temporary credentials are the ones that are linked to the Permissions Policy. Uses to authorize. 
+   
+## When to use IAM ROLES?  
+1. The most common are the AWS Services themselves. (like AWS Lambda; function as a Service Product).  
+   * **PoC**: Will create a _Lambda Execution Role_ 
+      * Trust: Has a trust policy witch trusts the Lambda Service. (will asume the load whenever the lambda Function is executed)  
+      * Permission Policy: Grants access to AWS products or Services.  
+   When the function runs it'll run sts:AssumeRole wich will execute the secureTokenService creating temporary Credentials to the temporary runTime env.  
+Why is it so powerful? It eliminates the need of hardcoding credentials in the code (vulnerability) and makes dynamic Authentication tolerant to upgrades.  
+2. BreakGlass style Situation: [ metaphor to BreakGlass for extinguisher, etc. EMERGENCY ).  
+Emergeny Role with higher privileges that WILL BE LOGGED.  
+3. Adding AWS to existing corporate ENV. (hybrid Cloud)
+   * **PoC**:  When wanting to reuse existing identities in, for example, AD or when you're restrained by the 5k max IAM users.
+   * **PoC**: WEB Identity. (using google/fb/twitter to loggin) Uses IAM Role to interact with AWS Resources. SCALABLE.  
+   
+## Service-Linked Roles  
+* Very specific IAM Roles that's likned to a specifi AWS service.  
+* The role is already predefined by a service.  
+* Provides permissions that a service need to interact with other AWS services on my behalf.
+* The same _service_ (or _IAM_)can create/delete the role...  
+* Can NOT be deleted if it's still in use (if the service that needs it still is in use/exists)
+* **_PASS ROLE_: Method inside AWS that gives avilibity to implement ROLE SEPARATION** the example would be using cloudWatch...  
+   * **PoC**: The user bob has permission to use CloudWatch but maybe cannot create an EC2. If he creates a CloudWatch template, the stack will _'PassRolePermission'_ to create the resources in the AWS Account.  
+   
+## AWS Organizations  
+Product which allows larger business to manage more than 1 AWS Account in cost effective way, and little to no org overhead. It has a herarchical architecture in a ReverseTree mode (similar to DNS NS) 
+### _**How it works?**_:  
+1. You choose 1 account who would be the _standard account_ (It can't be inside an organization) and create the Org. here. The organization will be created INSIDE this account but the account won't be inside de org.  
+2. The CREATOR account is called: **Management Account** (called MASTER Account before). 
+3. THe **Management Account** can send invitation to _standard accounts_. If the invitation is accepted then the invited account will become a _Member Account_.  
+4. **Consolidated Billing**: The billing method is removed from the _Member Accounts_ and is send through to the Management Account (also known as payer Account in financial). Will only receive 1 bill with ALL billing of all the AWS Org. 
+   * Pretty good to reduce prices due to AWS billing structures; There are AWS Services that are cheaper if they're used more. If the same service is used in different _member Accounts_ the usage will be pooled and its a way to enjoy(classify) to the cheaper/higher consuming rates.  
+
+### Herarchical Structure  
+Inverted Tree starting with:  
+* **Organizational Rool (OR)**:  
+   * Different to ROOT account.  
+   * Container inside an AWS Organization that can contain  
+      * Member accounts.  
+      * The Management Account.  
+      * Other containers, called OUs.  
+* **Organizational Unit**:  Can contain the same types as the OR. This options gives the chance of creating pretty complex herierchies.  
+* **Loggins**: Best Practices(BP) are to have a specific _Member Account_ that manages the Authentication (IAM) and using **IAM Roles** to the other _Member Accounts_ This other _Member Accounts_ will only have IAM Roles. ALSO, keep Management Account only for billing (BP on BIG companies). 
