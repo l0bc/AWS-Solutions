@@ -364,5 +364,25 @@ _**Components**_:
        * Internet-scale apps ( number of users )
        * Large orgs | org merges.
        * _there exists solutions for this with roles or Identity Federation._
-
+### IAM Groups  
+Trick question could be: can you login into a IAM Group? NO.  
+Some Characteristics to know:  
+   * Users in group inherits all groups policies and merges them with its own policies too.  
+   * No limit of Users in group (can have all 5000 users in all group).  
+   * There is no allUser groups by defaults
+   * No NESTING
+   * Max of 300 Groups (can be bigger if contacting support)
+Policies can be attached to resources (s3 for example). This policies known as resource policies can reference identities. 
+   i.e. A bucket has a policy associated with that bucket and the policy can give Sally access to the bucket ( resource policy ) by refereing the identities using (ARNs)  
+   * PD: Groups are NOT a true identity, The CAN'T be refered as a principal in a policy.
  
+### IAM Roles  
+Best suited to be used by an unkown number or multiple principles.  
+   * i.e. Multiple users on the aws account or different user, apps, or services inside or OUTSIDE your AWS.  
+It can be used for "temporary" basis; something becomes that role for a period of time and then stops.  
+   * The level represent a level of access but NOT YOU. (like borrowing the permissions).
+ 
+ Roles have 2 types of policies:  
+   * **_Trust Policy_**: Controls which identities can assume the role. Can reference user, roles, or SERVICES (like EC2 ) in or out the AWS Account.  
+      * It will create temporary Credentials to uers assuming the role (time limited). Created by STS ( SecureTokenService _[sts:AssumeRole]_).  
+   * **_ Permissions Policy_**: The temporary credentials are the ones that are linked to the Permissions Policy. Uses to authorize. 
