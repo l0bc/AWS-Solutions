@@ -428,3 +428,62 @@ Inverted Tree starting with:
       * Other containers, called OUs.  
 * **Organizational Unit**:  Can contain the same types as the OR. This options gives the chance of creating pretty complex herierchies.  
 * **Loggins**: Best Practices(BP) are to have a specific _Member Account_ that manages the Authentication (IAM) and using **IAM Roles** to the other _Member Accounts_ This other _Member Accounts_ will only have IAM Roles. ALSO, keep Management Account only for billing (BP on BIG companies). 
+ 
+### Service Control Policiles (SCP):  
+ Still a service of AWS Organization. JSON Documents (like IAM Policy) 
+ * can be attached to the Org as a hole.  
+ * To 1 or more Org.  
+ * Individual AWS Accounts.  
+ The Policies are inheritted down, everything that has les herierchy will be affected by a SCP. BUT the _Management Account_ is NOT affected by a SCP.  
+ Best practices; Never use the _Management Account_ on any resource/service in prod envs.  
+ Some **Characteristics** of SCP:
+ * SCPs are account permissions boundaries.  
+ * They can limit the accounts.  
+    * This would _restrict_ an account ROOT user (even though the ROOT account can't be restricted) by restricting the account as a hole. It's an indirect Restriction.  
+ * They **DON'T GRANT** any permissions. (its a boundary delimiter). But can establish what could be granted. Its a higher heriarchy than IAM Policies, 
+    * i.e. If a IAM Policy is created for granting EC2 instances accessing s3 buckets BUT Theres a ORG wide SCP denying entry to s3 buckets the IAM Policy will have no effect.  
+ * Can have a **ALLOW** List or **DENY** List structure.  
+    * ![image](https://user-images.githubusercontent.com/31637504/185287682-8185eac3-11e8-40d0-a0ed-2d73ca930d6d.png)  
+       * If there's no FullAWSAccess SCP, then the structure will be DENY ALL and start opening services as needed (this is preferable security wise).  
+ ## CloudWatch Logs  
+ Public Service: It can be used from AWS | on-premises (all the way to another cloudProvider). A powerful char is that it can create **metrics** based on logs by scanning the logs creating _metric filters_.  
+ _Charecteristics on logging Data_:  
+ * Stores  
+ * Monitors  
+ * Access  
+ _Integrations_:  
+ * AWS Services; EC2, VPC flowLogs, Lambda, cloudTrail, R53...  
+ * Unified CloudWatch Agent : when outside of AWS (on-premises or another cloudProvider).  
+ _Architecture_:  
+ ![cloudWatch Arch](https://user-images.githubusercontent.com/31637504/185293037-0c168408-0ebf-4db8-a3b0-9483a41c8ea3.png)  
+ ## cloudTrail Essentials  
+ Product/Service that logs all (or almost all) activity in AWS Account.  
+ **REGION BASED.**  
+ * Logs API calls/accountActivities as a **_cloudTrail Event_**  
+ * Sabes 90 days by default in _Event History_. 
+    * Service activated and free by devault.  
+ * Trail: used to customise cloudTrail Events.  
+ There exists 3 different types of events, we'll be concentrating on _Management_ and _Data_ Events for now (The 3rd one is called _Insight_).   
+ * **Management**: Provide info about management info performed by resource on the AWS Account. called **_controlPlain Ops_**.  
+    * CPOs e.g. : creating, delting, modifying EC2 instance.  
+ * **Data**: Information about resource OPERATIONS made on or TO resources.
+    * Example: when accessing a s3 bucket, uploading/downloading data, lambda execution.  
+    * NOT enabled by default.  
+ ### cloudTrail Trails  
+ Unit of configuration within the cloudTrail product. Provides configuration on how to operate. Trails are logged by regions.  
+ This trails will be captured _Management & Data_ events. Remember DATA is not enabled by default.  
+ NOT REALTIME - There's a delay of 15 mins.  
+ Configurations on Trails:  
+ * _One Region loging_: The trail will log on the region that it's been created.
+ * _All regions logging_: Logging all regions; it really creates a collection of trails on every region but managed as 1.  
+    * One great feature of ALL-regions Logging is if AWS add a new region it will be added automatically. 
+ * _Global Logging_: Global services are in this category (s3, AMI, STS, CloudFront). 
+    * To log _global Logging_ the configuration of the Trial needs to enable this feature.  
+    * Enable by DEFAULT if using userInterface to create the Trail.  
+    * will be logged to the us-east-1 region.  
+ * Log history can be configured to more than 90 days.  
+ * Can be saved on s3 buckets.  
+ * Can export the data into cloudWatch Service.  
+ NEW FEATURE: A AWS Org trail can be created. Will log all actions encapsuled by ORGs. 
+
+ 
