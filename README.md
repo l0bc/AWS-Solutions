@@ -486,4 +486,36 @@ Inverted Tree starting with:
  * Can export the data into cloudWatch Service.  
  NEW FEATURE: A AWS Org trail can be created. Will log all actions encapsuled by ORGs. 
 
- 
+ ## AWS Control Tower  
+ Allows **quick** and **easy** setup of **_multi-account_** environment. It orchestrates other AWS services to provide the functionality.  
+ ![controlTower arch](https://user-images.githubusercontent.com/31637504/185438394-a35ef818-b2ae-43d0-a8dc-66851fc8cdb1.png)   
+ Services orchestrated:
+ * Organizations.  
+ * IAM Identity Center (formerly known as AWS SSO).  
+ * cloudFormation.  
+ * AWS Config.  
+ ### Characteristics/Parts of controlTower:  
+ Can be thinked as Organization on steroids.   
+ The **landingZone** is a **WELL ARCHITECTED** multi-account env (homeRegion = the region where it was created/implemented). The UI (where the majority of users will be interacting with.)  
+ It provides:  
+ * _SSO/ID Federation(AD)_.  
+ * _Centralised Logging & Auditing_  [part of Security OU (also knwon as: foundationalOU) pd: there's another OU created (sandboxOU)]  
+    * cloudWatch  
+    * cloudTrail    
+    * AWS Config  
+    * SNS: simpleNotificationService  
+ * _Guard Rails_: **Detects/Mandates** rules/standards across all accounts.  
+ There are 3 types of _rules/standards_  
+    * Mandaroty - Always applied.  
+    * Strongly Recommended - SUPER RECOMMENDED.  
+    * Elective - used to implement fairly niche reqs. OPTIONAL  
+ **_Functioning_**:  
+ STATES: _CLEAR_, _IN VIOLATION_ or _NOT ENABLED_
+    * _Preventive_: Stop you doing things (SCPs(part of AWS Orgs)). Can be Enforced or not.  
+    i.e. allow/deny regions or disallow bucket policy changes. 
+    * _Detective_: Compliance checks (AWS Config Rules.)  
+    i.e. detect cloudTrail enabled or EC2 having IPv4.  
+ * _Account Factory_: Automation and Standarization on creating new account.  
+    * Allowed by cloudAdmins or endUsers.
+    * Can give **_admin Account_** to given named user (IAM Identity Center)  
+ * Dashboard: Single page oversight of the entire env.  
