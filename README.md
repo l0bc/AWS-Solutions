@@ -553,5 +553,21 @@ Inverted Tree starting with:
  * _Offloading_:  outsourcing media of the computing power. If having a webiste, saving all media in a bucket and then referencing the media requests to the s3 bucket. This lower the Computer consumption. 
  * _Out-of-band Pages_: when, for example, putting a website in maintenance a great solution is the static website s3 hosting. Only changing the DNS value to the static website meanwhile the upgrades/debugging/changes are being made on the real complete server.  
  
- ## Object Versioning and MFA Delete
+ ## Object Versioning and MFA Delete 
+ ### Object Versioning  
+ Controlled at bucket level & ones enable it cannot go back to be disabled (but can be suspended).  
+ When versioning is enabled operations which would modify objects will **generate a new version** and use the id value of each object to be able to differintiate verions (when disabled id = _null_).  
+ * _Current Version_: Latest version of object.  
+ * _Deletion_: Logically will only add a marker above the version you "want to delete" but in escense it's only hidding it. 
+    * The marker can be deleted making the previous versions available again. 
+    * For permanently deleting an object (or version of object) the id of the wanted object needs to be specified.  
+ **ATTENTION**: _Fixating on not being able to disable the versioning is on the deletion actions (it will not be deleting the objects in the conventional matter( as mentioned before)) and storage will grow faster due to all the different verions that it's also storing._  
+ ### MFA Delete  
+ Versioning needs to be enabled to use this feature. 
+ If enabled MFA is required for changing **Object Versioning** state (enabled <-> suspended).  
+ Also requiered to FULLY DELETE a version. The MFA TOKEN is requiered
+ * **MFA TOKEN** - The concatenation of:  
+    * MFA's Serial number.  
+    * Generated token.  
+  
  
