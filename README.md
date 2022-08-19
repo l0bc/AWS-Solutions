@@ -519,3 +519,39 @@ Inverted Tree starting with:
     * Allowed by cloudAdmins or endUsers.
     * Can give **_admin Account_** to given named user (IAM Identity Center)  
  * Dashboard: Single page oversight of the entire env.  
+
+ ## s3 Security
+ Buckets, the hole service really is private **by default**. To open permissions on this service there are:
+ * _s3 bucket Policies_: A type of resource policy. As its name defines it, it's like a identity Policy but it's jointed to _resources_ instead of Identities. The **Principal** part of the _Statement_ in the policy defines to whom that statement applies to (Identities).  
+    * _perspective Permisssions_: Controls who can access the resource. (instead of what can a user do)  
+    * _Allow/Deny Constraints_: Different form Identity Polices, _Resource Policies_ influences/manages different accounts. 
+       * The policies in place influence everyone accesing the _resource_ regardless if they're on the same or **different** account.  
+       * **Anonymous** principals can be created. This gives access/denial to any entitiy even those who're not authenticated in AWS.  
+ * _ACLs_: Its used on objects and buckets but they're dying. Even AWS doesn't recommend them due to its lack of flexibility, they're pretty constrained not giving you the possibility of creating more complex permissions.
+    * Caracteristics: Subresource, Legacy(outdated)  
+       * It can't inlfuence a whole list (the ACL needs to be implemented individually; on a _bucket_ or an _object_. It cant influence a list of...  
+ * _Block Public Access_: Newest feature. It's installed in between the accessing of a **ANONYMOUS** Idenitty into a BUCKET with Anonymous access enabled. It's above herierchaly to the Bucket Policy.  
+  Theres 4 different profile Settings:
+    * ![BLOCK PUBLIC ACCESS](https://user-images.githubusercontent.com/31637504/185538796-3cbbf39a-aeae-46b6-8007-ace18d323c21.png)  
+ #### EXAM POWERUP
+ **Identity** vs **Resource** POLICIES, when to use what? :  
+ * Identity:  
+    * When controlling different Resources accross 1 AWS account.   
+    * If having a preference for IAM.  
+    * If the accessing comes only from 1 same account.  
+ * Resource:
+    * Controlling only 1 Resource (i.e. s3)  
+    * Anonymous or cross-Account Grant.  
+ * NEVER use ACLs unless you MUST.  
+ ## s3 Static Website Hosting  
+ Normal acces is via **AWS APIs** giving it powerfull functionallity to access it via HTTP ( thinking of it as a RESTful API Structure).  
+ _Index_ and _Error_ documents are set automatically.  
+ Also a _website Endpoint_ is created,  
+ The domain name structure is created by a conjuction of the bucket's name, region, and awsstring.  
+    If wanting to have a custom domain you create it via Route53 BUT **the bucketname needs to be named exactly as the custom domain** (including DNS topLevelDomain(TLD) names)  
+ _2 COMMONLY USED EXAMPLES_  
+ * _Offloading_:  outsourcing media of the computing power. If having a webiste, saving all media in a bucket and then referencing the media requests to the s3 bucket. This lower the Computer consumption. 
+ * _Out-of-band Pages_: when, for example, putting a website in maintenance a great solution is the static website s3 hosting. Only changing the DNS value to the static website meanwhile the upgrades/debugging/changes are being made on the real complete server.  
+ 
+ ## Object Versioning and MFA Delete
+ 
