@@ -569,5 +569,29 @@ Inverted Tree starting with:
  * **MFA TOKEN** - The concatenation of:  
     * MFA's Serial number.  
     * Generated token.  
-  
+## S3 Performance Optimization  
+ ![Example Architecture](https://user-images.githubusercontent.com/31637504/186460688-6e04a58d-93d4-4fb6-ad6d-51f0da7b4231.png)  
+ #### Performance Characteristics:  
+ * When upload: the file is converted to object and uploaded ina signle data stream to s3 ( s3:putObject )  
+ * If stream fails - upload fails ( doesn't matter the percentage that has already been uploaded )  
+    * Requires full restart.  
+ * 1 port upload has a 5GB max ( eventhough, never trust a 3GB+ file on this SINGLE PUT upload )
+ * Speed & Reliability = limit of 1 stream.  
+
+ #### Multipart Upload  
+  Solution to constraints s3 _singlePUTUpload_ has.  
+ Think of it as _torrent_:  
+ * Data is broken up  
+    * up to 10 000 max parts
+       * from 5MB - 5 GB pp.  
+       * last part can be smaller than 5MB though.  
+ * min data size = 100MB for using this service.  
+ * **Transfer Rate = speed**: sum of all individual uploads 
+ #### s3 Transfer Acceleration.  
+ Default is OFF. To turn it on:  
+    * BucketName cannot contain periods  
+    * Needs to be DNS compatible.  
+ It uses EDGE Locations ( starting with the geographically nearest to you ) to route your data into the bucket instead of using the public internet. Pretty obvious being a smaller network it will be much faster than the public internet.  
+ webpage to compare velocity using this feature or NOT to an specific region: http://s3-accelerate-speedtest.s3-accelerate.amazonaws.com/en/accelerate-speed-comparsion.html  
+ 
  
