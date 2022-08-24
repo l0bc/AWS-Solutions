@@ -21,7 +21,7 @@ A good practice would be to create new account for DEV, TEST, PROD.
  
  
  
-## **IAM BASICS**
+## **IAM BASICS**  
  * Using "least privilege access" account ( create accounts for almost any service/user); grant ONLY permissions that the account needs, nothing more.
  * Every AWS account has its own IAM DB but
      * It is a global resilience service: Data is replicated in all different regions. 
@@ -586,12 +586,26 @@ Inverted Tree starting with:
        * from 5MB - 5 GB pp.  
        * last part can be smaller than 5MB though.  
  * min data size = 100MB for using this service.  
- * **Transfer Rate = speed**: sum of all individual uploads 
+ * **Transfer Rate = speed**: sum of all individual uploads  
  #### s3 Transfer Acceleration.  
  Default is OFF. To turn it on:  
-    * BucketName cannot contain periods  
-    * Needs to be DNS compatible.  
+   * BucketName cannot contain periods  
+   * Needs to be DNS compatible.  
  It uses EDGE Locations ( starting with the geographically nearest to you ) to route your data into the bucket instead of using the public internet. Pretty obvious being a smaller network it will be much faster than the public internet.  
  webpage to compare velocity using this feature or NOT to an specific region: http://s3-accelerate-speedtest.s3-accelerate.amazonaws.com/en/accelerate-speed-comparsion.html  
- 
+ ## Encryption 101  
+ 2 main approaches on encryption:  
+    * _Rest_: Encrypting a disk for example. If a computer is stolen, it would have encrypted data.  
+       * Used when 1 entity (person maybe) is used.  
+    * _Transit_: Like ssl/tls, the encryption is in route. You create a Tunnel around the raw data.  
+ _Encryption Concepts_:  
+ * _Algorithm examples_: Blowfish, AES, RC4, DES, RC5, RC6.  
+ * _Symmetric Encryption Keys_: Static key to decyrpt/encrypt data.  
+ * _Asymmetric Encryption keys_: Key pairs (public/private keys).  
+    * _Public_: Only works to ENCRYPT data. 
+    * _Private_: Used to DECRYPT data. 
+ So in a nutshell:  
+Encryption:  
+ iNPUT: PLAINTEXT.  
+ input + key INTO an _algorithm_ = CipherText.  
  
