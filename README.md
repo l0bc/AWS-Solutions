@@ -608,4 +608,39 @@ Inverted Tree starting with:
 Encryption:  
  iNPUT: PLAINTEXT.  
  input + key INTO an _algorithm_ = CipherText.  
+ #### Steganography  
+ Hide something "in plain site". Is a way to send data or have data that is encrypted but it's not obvious that it's encrypted (or has hidden data).  
+ ## Key Management Service (KMS)  
+ * Regional & Public Service  
+ * It creates, stores and Manages Cryptographic Keys
+    * Handles Symmetric & Assymetric Keys
+ * Does crypto operations (like _encrypt_ and _decrypt_) but has a max 4KB data size for direct encryption (there's a workaround...).  
+ * **Keys never leave KMS - Provides _FIPS 140-2 (L2) Standard_. (memorize standard)  
+ * KMS Keys are isolated to a Region.  
+ * Can be AWS owned or customerOwned (almost not interacting with AWS owned as user).  
+    * Customer owned keys can be managed by _Customer_ or _AWS_.  
+ * KMS Keys can use Rotation.  
+    * It can decrypt an old version even after a rotation.  
+       * Can use aliases to manage.  
+ * Every Key has a policy file.  
+ #### Process  
+    1. User picks Region.  
+    2. Creates Key (CMK) and is saved in KMS (encrypted).  
+    3. Creates _Encrypt_ call and data to be encrypted.  
+    4. KMS Service _encrypts_ IF SHE'S AUTHORIZED and returns the encrypted data to the user.  
+ The permissions are independent from eachOther (roleSeparation)  
+ * Encryption  
+ * Decryption  
+ * Creation/Deletion of keys.  
+ _Workaround of 4KS_  
+ It's by creating a ney key = DataEncryptionKey (DEK).  
+ Created by the _generateDataKey_ function of KMS + a _CMK (KMS created Key)_.  
+ Process:  
+ 1. After creation the service will give you 2 keys (we can think like symmetric and asymmetric key)  
+    1. Plaintex Version (symmetric).  
+    2. encrypted Version (symmetric) using a kms key.  
+ 2. Encrypts data using plainText key.  
+ 3. Deletes the plainText version  .
+ 4. _stores encrypted key_ with data.  
+ 
  
