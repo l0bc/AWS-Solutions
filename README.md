@@ -642,5 +642,45 @@ Encryption:
  2. Encrypts data using plainText key.  
  3. Deletes the plainText version  .
  4. _stores encrypted key_ with data.  
+ ## s3 Encryption  
+ _Buckets AREN'T encrypted, objects are..._  
+ There are 2 (or 3?) types of encryption:  
+ 1. **Client-Side**  
+    * Uses in-transit encryption (encrypted tunnel)  
+    * Before uploading, the data is already encrypted. AWS s3 will never have plainText data. 
+ 2. **Server-Side**  
+    * Also uses in-transit encryption.  
+    * Data is encrypted until arriving to s3. (from client-server(s3) it goes via plainText inside https tunnel)  
+    * Uses more CPU because the encryption are being made in AWS.  
+    * **_3 types of serverSide Encryption_**:  
+       1. _SSE-C_: Server-side Encryption with Customer-Provided Keys.  
+          * Customer Manages Keys and s3 Manages the Encryption.  
+          * Customer gives key and object to AWS.  
+          * AWS s3 saves hash of key into encrypted file ( this makes sure the same key was used to encrypt when trying to decrypt).  
+       2. _SSE-s3_: Server-Side Encryption with Amazon s3-Managed keys. Uses AES-256.  
+          * Diff from _SSE-C_ user only provides plainText object.  
+          * s3 creates a masterKey for the encryption process.  
+          * s3 will create a new key SPECIFICALLY for every uploaded object. After that s3 will use the _MASTER KEY_ to encrypt the uniqueKey of object. The original key is discarded.  
+          * when this method is NOT SUITABLE:  
+             1. When need to control keys and access to the keys.  
+             2. When need to control keyRol.  
+             3. When need to have role Separation.  
+       3. _SSE-KMS_: Server-Side Encryption with Customer Master Keys (CMKs) Store in AWS Key Management Service (KMS).  
+          * Pretty similiar in a high level view from _SSE-s3_ the difference is on the MASTER KEY. KMS will create a CMK and store it in the KMS Service; this key will work as the MasterKey.  
+          * When encryption happens...
+             1. KMS creates a dataKey and encrypts it using the CMK.  
+             2. KMS sends BOTH keys to s3 to create the encryption.  
+             3. Encryption is made with the plainText key and then it's discarded.  
+             4. s3 saves encrypted data and attaches the encrypted key to it.  
+          * The superPowerful feature of _SSE-KMS_ is than the CMK can be a custome one; providing control of the key (rotation, roleSpecific).  
+          * when DECRYPTION happens...  
+             1. The CMK is used to decrypt the attached encrypted dataKey.  
+             2. The decrypted dataKey is used to decrypt the cipherText.  
+          * If admin/user cannot have KMS access then he'll not be able to decrypt things.  
+ ![summaryTable s3 Encryption](https://user-images.githubusercontent.com/31637504/187832191-acb05aec-fba5-441b-95f0-5dd207e1486a.png)  
+ 3. _Bucket Default Encryption_  
+ If adding a header: AES-256 | aws:kms it will use the encryption on the header.  
+ If the header is not specified, the BUCKET DEFAULT ENCRYPTION will be used.  
  
+
  
