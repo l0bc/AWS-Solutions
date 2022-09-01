@@ -681,6 +681,79 @@ Encryption:
  3. _Bucket Default Encryption_  
  If adding a header: AES-256 | aws:kms it will use the encryption on the header.  
  If the header is not specified, the BUCKET DEFAULT ENCRYPTION will be used.  
- 
-
- 
+ ## s3 Object _Storage Classes_  
+ ### _s3 Standard_:  
+ Objects are replicated across at least 3AZs in the AWS Region.  
+ _When to use?_ For **Frequently Accessed Data** wich is IMPORTANT AND NON REPLACEABLE.  
+    * Has eleven 9s of durability = for 10M objects, 1 object loss per 10k years.  
+    * Has different mechanisms/checks to detect & fix data corruption.  
+       1. Replication over 3 AZs.  
+       2. Content-MD5 Checksums.  
+       3. Cyclic Redundancy Checks (CRCs).  
+    * When an object is updated succesfully, HTTP/1.1 200 code response.  
+    * **_PRICE_**  
+       * billed a GB/month fee for data stored. 
+       * fee per GB for transfer OUT
+       * fee per 1k requests. 
+       * NO specific retrieval fee, no minimum duration, no minimum size.  
+    * 1ms first byte latency
+    * Objects can be made _publicly available_.  
+ ### _s3 Standard-IA_(InfriquentAccess):  
+ _When to use?_ For IMPORTANT & NOT REPLACEABLE DATA BUT **Infriquently Accessed**  
+ Same _durability, dataCorruptions Mechanisms, Replicatoin_.  
+    * **_PRICES_**  
+       * 1/2 price of data storing compared to _ standard_.  
+       * There's an extra fee on retrieval (additional to transport fee).  
+       * Minimim duration charge = 30 days.  
+       * Minimum capacity charge = 128k per obj.  
+    We can see if lots of small objects, short duration of objects or constant retrieval THIS IS NOT THE SOLUTION.  
+ ### _s3 One Zone-IA_:  
+ Cheaper than the 2 above.  
+ _When to use?_ For longLive data, infriquently accessed and NON CRITICAL or EASILY REPLACED.  
+    * Has the same _minimum constraints_ as _S3IA_ and retrieve fee.  
+    * Chepear because it lacks Replication in other AZs (only 1 as the name provides).  
+       * It still has eleven9s durability.  
+ ### _s3 Glacier - Instant_:  
+ Like s3 Standard-IA... but; cheaper storage, more expensive retrival, longer minimum.  
+ It comes in handy when you need instant access but less frequent than _Standard-IA_ (once every quarter).  
+    * Minimum duratoin charge = 90 days  
+ ### _s3 Glacier - Flexible Retrieval_:  
+ Same _durability, data COrruptions Mechanisms, Replications_.  
+ _When to use?_ When storing archieval data where frequent or realTime access is not necessary.  
+    * **PRICES**  
+       * 1/6 of s3 Standard storage fee.  
+    * **RESTRAINTS**  
+       * Objects canNOT be made _public_.  
+          * Any access of data requires a **retrieval Process** (beyond object's metadata).  
+          * Minimum size = 40KB  
+          * Minimum duration = 90 days.  
+       * When retrieved the object is saved in SIA TEMPORARELY. (TYPES; faster = +Expensive)  
+          * _Expedited_ (1-5 min)  
+          * _Standard_ (3-5 hours)  
+          * _Bulk_ (5-12 hours)  
+       * First byte latency = minutes | hours.  
+ ### _s3 Glacier Deep Archive_:  
+ _When to use?_ To store archive data that is rarely or never accessed.  
+ Data in a _Frozen State_.  
+ * **RESTRAINTS**  
+    * As all archives, data cannot be publiclty accessible.  
+       * Minimum size = 40KB  
+       * Minimum duration = 180 days.  
+    * When retrieved, goes to SIA TEMPORARELY also but _timeRetrieval_ varies:  
+       * _Standard_ (12 hours)  
+       * _Bulk_ (up to 48 hours)  
+ ### _s3 Intellingent-Tiering_  
+ As you can deduce, it is the solution where it automates and makes dynamic the storage tier storage.  
+ _When to use?_ When _long-lived data_ with _changing_ or _unknown_ patterns.  
+Contains 5 different storage tiers.  
+   * Frequent Access.  
+      * After 30 days of unAccess moves to _IA_.  
+   * Infrequent Access.  
+      * After 90 days of unAccess moves to _Archive IA_.  
+   * Archive Instant Access.  
+      * After 90-270 (configurable) days of unAccess moves to _Archive Access_.  
+   * Archive Access. [OPTIONAL]  
+      * After 180-720 (configurable) days of unAccess moves to _Deep Archive_.  
+   * Deep Archive. [OPTIONAL]  
+PRINCIPAL DIFF: has a fee per 1k object monitored ( instead of the retrieval fee other solutions have ).  
+       
