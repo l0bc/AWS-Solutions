@@ -756,4 +756,39 @@ Contains 5 different storage tiers.
       * After 180-720 (configurable) days of unAccess moves to _Deep Archive_.  
    * Deep Archive. [OPTIONAL]  
 PRINCIPAL DIFF: has a fee per 1k object monitored ( instead of the retrieval fee other solutions have ).  
-       
+## s3 LifeCycle Configuration.  
+ **Set of rules** wich apply to a bucket.  
+ * **rules** = _actions_, do this if that.  
+ * they're set on _buckets_ or _groups of objects_ (shared prefix/tag).  
+ There are 2 types of actions:  
+    * _Transition_ - Can be changed of tier automatically after some actions ( after 30 days without being accesed for example). What I'm understanding is you could actually create a intelligent-tiering (manually) or also it could bee also seen as a limited intelligent tiering)    
+       * ![Transation](https://user-images.githubusercontent.com/31637504/188359603-9aa7b465-ac57-4f22-8cfd-a474e0147128.png)  
+       * LIMITATIONS TO TAKE INTO CONSIDERATION.  
+       * If on s3 standard there is a minimum of 30 days before transitioning the object into s3-SIA or s3-OZIA.  
+       * Same but for going into _glacier classes_, there needs to be an additional 30 days on the SIA, OZIA to transition. (if you create a new rule this isn't the case but if everything is delcared in 1 single rule, this limitations apply.)  
+    * _Expiration_ - Can delete or modify the object, also after certain amount of time.  
+## s3 Replication  
+ The Replication configuration is all made on the Source bucket. Then the service will use a IAM Role to make the necessary actions and the transportition will be encrypted via SSL.  
+ There are 2 types:  
+ 1. _Cross-Region Replication_ **(CRR)**  
+ 2. _Same-Region Replication_ **(SRR)**  
+ Both of this types are very similiar configuration wise, the only difference is when the buckets are on different AWS ACCOUNTS; those need extra configuration _(a bucket/resource policy which gives trust to the source IAM Role to take acction into the Destionation account.)  
+ **Options**:  
+    * copy _all objects_ or a _subset_ of objects in the bucket.  
+    * _Storage Class_ - default is to maintain the same **SC**.  
+    * _Ownership_ - default is the source account. (no prb when the buckets are owned by te same account OJO!)  
+    * _Replication Time Control_ (RTC) - Garanteed level of predictibility adding visual monitoring. It adds an SLA(ServiceLevelAgreement) of 15 minutes.  
+ * _**CONSIDERATIONS FOR EXAM!**_  
+    * _Not retroactive_ & versioning needs to be **ON**.  
+       * _Not retroactive_ means if the bucket has already objects in it they'll not be copied if not specified manually.  
+    * _One-way Replication_ always from _source_ to _destination_.  
+    * Can replicate: unencrypted, SSE-S3 & SSE-KMS (this last one needs extra config) data but it cant replicate SSE-C because s3 is not in possesion of the keys.  
+    * Maybe obvious but, bucket owner NEEDS permissions to objects.  
+    * NO _system events_ (if for example changes made by lifeCylce Conf), _glacier_ or _glacier deep archive_.  AND **NO DELETES!!**  
+ _Why use replicatoin?_  
+    * on SRR - is for logs Aggregation.  
+    * on SRR - PROD and TEST syncronization.  
+    * SRR - Resilience with strict sovereignty (some industries are pretty restreined so if for example theres an audit account, this could be a solution).  
+    * CRR - Global Resilience Improvement; aide if errors/problems occur. 
+    * CRR - Reduce Latency.  
+ 
