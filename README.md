@@ -791,4 +791,20 @@ PRINCIPAL DIFF: has a fee per 1k object monitored ( instead of the retrieval fee
     * SRR - Resilience with strict sovereignty (some industries are pretty restreined so if for example theres an audit account, this could be a solution).  
     * CRR - Global Resilience Improvement; aide if errors/problems occur. 
     * CRR - Reduce Latency.  
+ ## s3 Presigned URLs  
+ A way to give a person/applicatoin access to object inside bucket using **your** credentials in a secure way.  
+ Process:  
+ 1. Generate presignedURL (the owner/account will make the request)
+    * The request needs to be authenticated & authorized.  
+    * Bucket where the permission will be granted.  
+    * Date when the URL will expire.  
+ 2. AWS reponds with the generated _presignedURL_ encodig the details in it.  
+ 3. The creator shared the _presignedURL_ with whomever he wants.  
+ 4. The unauthenticated actor uses the URL.  
+ ### Exam TIPS  
+ * A user can create an URL for an object he has **_no access to_** (by relation, the URL will not be able to access the resource/object)  
+ * The URL will match the permissions fo the identity that generated it.  
+ * Acces denied could be = never had access, URL has already expired.  
+ * **DONT GENERATE WITH AN IAM ROLE** Sometimes the temporary credentials of a role are shorter than the preSignedURL. it could make the URL stop working.  
+ 
  
