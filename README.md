@@ -806,5 +806,43 @@ PRINCIPAL DIFF: has a fee per 1k object monitored ( instead of the retrieval fee
  * The URL will match the permissions fo the identity that generated it.  
  * Acces denied could be = never had access, URL has already expired.  
  * **DONT GENERATE WITH AN IAM ROLE** Sometimes the temporary credentials of a role are shorter than the preSignedURL. it could make the URL stop working.  
- 
- 
+ ## s3 Select & Glacier Select  
+ Functionality to retrieve part of an object instead of a complete one by using SQL-like statements.  
+ File formats where this can be possible are, but not exclusively:  
+ * CSV  
+ * JSON  
+ * Parquet  
+ * BZIP2 Compression  
+    * CSV  
+    * JSON  
+ The principal functionallity is filtering the data INSIDE the s3 servers, achieving more speed and reducing costs (traffic is lowered).  
+ ## s3 Events Notifications  
+ **Notifications** generated when events occur in a bucket:  
+    * Object _Created_ (PUT, POST, COPY, CompleteMultiPardUpload)  
+    * Object _Delete_ (Delete, DeleteMarkerCreated)  
+    * Object _Restore_ (Post(INITIATED), Completed) - i.e. Retrieving from archive.  
+    * _Replication_ (OperationMissedTHreshold, OperationReplicatedAfterThreshold, OperationNotTracked, OperationFailedReplication.)  
+ This notifications can be delivered to _SNS_, _SQS_ & _Lambda Functions_ having the possibilite to trigger _Event driven Proceses_.  
+ **_EventBridge_** is the "replacement" of this OLD service where it supports more types of events and more services to connect to.  
+ ## s3 Access Logs  
+ Gives detailed information of all access actions made into the sourceBucket. Keep in mind this is a BEST EFFORTS log delivery; the logs will arrive to the Target Bucket within a few hours.  
+ To enable/make work this feature, this are the steps to follow:  
+ 1. Enable Logging on the bucket where yo want to revieve the _Access loggings_ via console UI or _PUT Buckt Logging_ via CLI 
+ 2. An s3 Log Delivery Group is the service which reads and transmits the logs to the TARGET BUCKET.  
+ 3. Create a Bucket ACL to allow access to _s3 Log Delivery Group_.  
+ **LOGFILEs** consis of Log records which are:  
+    * New-line delimited.  
+    * Attributes are space-delimited.  
+ ## VPC Sizing & Structure  
+ Considerate the following when planning/creating our VPC;  
+ * Size of the VPC  
+    * Limits on CIDR - minimum /28 mask (16 IPs)  
+    * maximum /16 (65536 IPs)  
+ * Are there ane Networks **we can't use**?  
+    * if other CIDRS are already in place, ignore them. Overlapping of CIDR can be very messy.  
+ * Ranges of other VPCs, Cloud, On-premises, & other vendors  
+    * A tip is to think in how manny Regions will the app be present.  
+       * Reserve 2+ networks per region per account.  
+   * Assume the worse.  
+ * Try to think _scalable_ always, mindful with the future.  
+ * VPC **Structure** - Where the application will have Tiers (different parts of app (web, app, db)) & resilieny Zones (Availability Zones).  
