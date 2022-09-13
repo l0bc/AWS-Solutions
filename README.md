@@ -846,3 +846,42 @@ PRINCIPAL DIFF: has a fee per 1k object monitored ( instead of the retrieval fee
    * Assume the worse.  
  * Try to think _scalable_ always, mindful with the future.  
  * VPC **Structure** - Where the application will have Tiers (different parts of app (web, app, db)) & resilieny Zones (Availability Zones).  
+ ## Custom VPCs  
+ <img width="2518" alt="vpc_endstate" src="https://user-images.githubusercontent.com/31637504/189803866-30b8fcbe-fb3f-447a-8b1f-40ae4c9dd462.png">  
+ * _Custom VPCs_ are Regional Resiliant and Regional isolated.
+ * Can create isolated networks, if wanted there can be more than 1 network in one Region.  
+ * I/O is completely desactivated unless exmplicit condiguration.  
+    * It VPC has also blast Radious.  
+ * We can say they're the contrary of the default VPC:  
+    * Flexible configuration.  
+ * _Hybrid Netowrking_: It can be configured to interconnect with other cloud vendors as well as on-premises.  
+ * When creating the VPC you can decide if creating it on **shared** or **dedicated** HW. PAY ATTENTION TO THIS!  
+    * _Default_ - It goes PER RESOURCE created inside the VPC.  
+    * _Dedicated Tenancy_ - Everything goes to dedicated HW, pay attention (it has premium payment).  
+ * Uses IPv4 Private CIDR Blocks & Public IPs.  
+ * Has 1 Primary Private IPv4 CIDR Block.  
+    * minimum /28 subnet (16 IPs).  
+    * maximum /16 subnet (65536 IP).  
+ * Has a soft limit (can be extended by contacting support) for seconday IPv4 Blocks.  
+ * Can use also IPv6 CIDR block by adding a /56 subnet mask.  
+ * **DNS in a VPC**  
+    * Provided by R53  
+    * VPC **_Base IP +2_** Address,  
+       * The DNS address will be: **10.10.0.2** if, for example, the VPCs address is 10.10.0.0.  
+    * **_enableDnsHostnames_** - gives instances DNS Names. (public)  
+    * **_enableDnsSupport_** - Enables DNS resolution in VPC.  
+ ### VPC Subnets  
+ * AZ Resilient.  
+ * a subnetwork of a VPC _within a particular AZ_  
+    * Can never be changed.  
+    * Can never be in more than 1 AZ.  
+    * There can be more than 1 Subnet per AZ though.  
+ * IPv4 CIDR is a subset of the VPC CIDR (subnetting...).  
+    * There are 5 Reserved IP by subnet.  
+       * **Network Address**  
+       * **Network +1** - VPC Router.  
+       * **Netowrk +2** - Reserved [DNS]  
+       * **Network +3** - Reserved Future Use  
+       * **Broadcast Address** is locked, eventhough it cannot be used in VPCs.  
+ * For every VPC there is a DHCP Option Set. [They cannot be changed after being configured].  
+ 
