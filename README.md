@@ -847,8 +847,7 @@ PRINCIPAL DIFF: has a fee per 1k object monitored ( instead of the retrieval fee
  * Try to think _scalable_ always, mindful with the future.  
  * VPC **Structure** - Where the application will have Tiers (different parts of app (web, app, db)) & resilieny Zones (Availability Zones).  
  ## Custom VPCs  
- <img width="2518" alt="vpc_endstate" src="https://user-images.githubusercontent.com/31637504/189803866-30b8fcbe-fb3f-447a-8b1f-40ae4c9dd462.png">  
- * _Custom VPCs_ are Regional Resiliant and Regional isolated.
+ * _Custom VPCs_ are Regional Resiliant and Regional isolated.  
  * Can create isolated networks, if wanted there can be more than 1 network in one Region.  
  * I/O is completely desactivated unless exmplicit condiguration.  
     * It VPC has also blast Radious.  
