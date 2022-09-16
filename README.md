@@ -883,4 +883,32 @@ PRINCIPAL DIFF: has a fee per 1k object monitored ( instead of the retrieval fee
        * **Network +3** - Reserved Future Use  
        * **Broadcast Address** is locked, eventhough it cannot be used in VPCs.  
  * For every VPC there is a DHCP Option Set. [They cannot be changed after being configured].  
+ ## VPC Routing & Internet Gateway  
+ ### VPC Router  
+ * Highly available.  
+    * Works on every AZ that the VPC uses.  
+ * Present on every VPC.  
+    * It has an address on every subnet present (_network+1_ address).  
+ * You can create a route table and associate it to a subnet.  
+    * A subnet can only have 1 _route table_ associated.  
+    * If the the subnet has no specific _route table_ the MAIN one will be used.  
+       * The _MAIN route table_ can be associated with many subnets.  
+ ### Internet Gateway (IGW)  
+ **Region Resilient** attached to a VPC.  
+ * 1 VPC can have 0 or 1 IGW.  
+ * Can create IGW but not link it to any VPC, once it's related you cannot link it to another VPC.  
+ * The IGW can connect the VPC to the _AWS Public Zone_ or to the _Internet_.  
+ To create a public VPC:  
+    1. Create IGW.  
+    2. Atach IGW to VPC.  
+    3. Create custom RT.  
+    4. Associate RT to VPC.  
+    5. Create default Routes onto IGW.  
+    6. Configure Subnet to allocate IPv4 addresses (optionall IPv6) by default.  
+ #### PD - BASTION HOST/JUMPBOX  
+ Bastion Host = Jumpbox. It's an instance in a public subnet where incoming _MANAGEMENT_ connections arrive to have access to internal VPC Resources. As highlithed before thery're used to administer/manage private services/resources on an internal VPC.  
+ 
+ 
+ 
+ 
  
