@@ -908,7 +908,44 @@ PRINCIPAL DIFF: has a fee per 1k object monitored ( instead of the retrieval fee
  #### PD - BASTION HOST/JUMPBOX  
  Bastion Host = Jumpbox. It's an instance in a public subnet where incoming _MANAGEMENT_ connections arrive to have access to internal VPC Resources. As highlithed before thery're used to administer/manage private services/resources on an internal VPC.  
  
- 
- 
- 
- 
+ ## _Stateful_ vs _Stateless_ Firewalls  
+ _ephemeral_ = Temporary (used when client chooses a _ehpemeral_ port to create a TCP/IP connection to a server.)  
+ * _**StateLess**_ 
+    * Doesn't understand the state of connections - it sees the request and response of the connections as completely independent. You gotta create rules for every independent request/response and as inbound/outbound.  
+    * tip - Request will always have a well-known port. Response will be to an ephimeral port. This could be complicated on stateless Firewalls, you can see why. 
+ * **_StateFull _**  
+ Intelligent enough to identify the response of a given request. It can "group" the request/response relation of a conversation between servers. It reduces overhead on rules.  
+ ## Network Access Control Lists (NACL)  
+ **STATELESS**. A traditional firewall available within AWS VPCs. They affect all packets going _inbound/outbound_ of the VPC but not internal traffic. The rule architecture is DENY ALL and EXPLICIT ALLOW/DENY based on a match starting from UP to bottom.  
+    * Matches could be : 
+       * DST IP  
+       * DST PORT  
+       * PROTOCOL  
+ A _default NACL_ is created always after creating a VPC. It is an ALLOW ALL for inbound/outbound. If creating a _Custom VPC_ it will will DENY ALL by default.  
+NACLs CANNOT be assigned to AWS resources, ONLY SUBNETS.  
+Can be used together with Security Groups to add explicit DENY.  
+## VPC Security Groups (SG)  
+**STATEFUL** - if you allow a request, the response will be automatically allowed. 
+Be aware, in **SG** there is NO EXPLICIT DENY, you cannot block a specific BAD ACTOR. Because of this limitation we use NACLs in conjutions with SGs.  
+* ATTENTION - SGs are attached to an Elastic **Network Interface** (ENI) NOT INSTANCES. The interface might be seen as if you're attaching it to an instance but what it's really happening is, the SG will be attached to the primaryNetworkInterface of that instance.  
+*Unique features:  
+   * Remember, they cannot block specific traffic. If there's a rule allowing traffic into https, if there's a bad actor you cannot specifically block its ip with SGs.  
+   * _Logical References_: You can reference as Source of a SG Rule a _SG_. So every server/client that's associated to the security group mentioned in the rule will be accepted traffic. Very powerful feature making easier security administration. I can see it as a way of compartelizing the sources (due to the limitation of not having EXPLICIT DENYs, but with the limitation of only being inter-subnetting traffic( or can you have publicTraffic associated to a security group? TO SEE...).  
+      * _Self References_: A SG can _self-reference_ itself to allow traffic between all servers associated to the SG. All servers associated to that SG will be able to communicate between all the members of the SG.  
+## NAT & NAT Gateway  
+Network Address Translation.  
+Features:  
+* _IP Masquerading_ (what the mayority of people think NAT is (but only is 1 feature)) - hiding CIDR Blocks behind one IP.  
+   * It gave PRivate CIDR range **outgoing** internet* access.  
+   _Traffic flow_:  
+      1. Source client (inside subnet) sends a request through its default routning record to a NAT GATEWAY.  
+      2. The NAT GATEWAY job is to save a record of the src IP and translate the request to having its own IP and transfers it to the Internet Gateway via the VPC Router.  
+      3. The Internet Gateway gives the packet a public ip and sends it to the internet.  
+      4. The response is the same process but backwards...  
+* The NAT Gateway needs to run from a _Public Subnet_.  
+* Uses Elastic IPs (Static IPv4 Public).  
+* AZ Resilient Service (High-Availability in AZ).  
+   * To have _Region Resiliency_ add 1 natGateway on every AZ.  
+* Managed Service.  
+   * Charged Based on number of NATGateway (& another on traffic).  
+   
