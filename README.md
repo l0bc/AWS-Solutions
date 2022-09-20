@@ -948,4 +948,27 @@ Features:
    * To have _Region Resiliency_ add 1 natGateway on every AZ.  
 * Managed Service.  
    * Charged Based on number of NATGateway (& another on traffic).  
-   
+### NAT Instance vs NAT Gateway  
+ Before the **NAT Gateway** was an _EC2 Instance_ who worked as the NATting device.  
+ NOTE: Default config on instances will drop all packets that are not source or destination of itsel, so if wanted to use the ancient version (_NAT Instance_) you need to disable **Source/Destination Checks** from UI/CLI.  
+ * **NAT Gateway** is a much better option for almost every scenario; it scales better, has higher availability & is more customizable. BUT IT DOESN'T OFFER FREE TIER.  
+ * **NAT Gateway CANNOT** be used as bastion host or as PORT FORWARDING. Its a managed Service.  
+ * SECURITY  
+    * _NAT Instance_: Due to being an _EC2 Instance_ ACLs or Security Groups can be used to manage security.  
+    * **NAT Gateway**: Don't support Security Groups, can only use NACLs. <-EXAM !  
+ * What about IPv6?  
+ NAT is not required on IPv6, IT WONT WORK !  
+ # EC2  
+ Remember this is an IaaS.  
+ ## Virtualization 101  
+ Proces of running more than 1 OS on a single hardware (server).  
+ A computer architecture has something called _kernel_; this is a gateway/bridge thats the one who's capable of ineracting with the HW. If any part of the computer attempted to make a _PRIVILEGED CALL_ the system would crash.  
+ When Virtualizaion was created, this issue was solved but via Software (transparent to the Kernel) making it very inefitient:  
+ * EMULATED Virtualization:  
+    * Instead of the OS after the Kernel "layer" there was a new Layer called (HyperVisor). On top of it there'll be VMs who would think they where "real" being emulated by the HyperVisor.  
+    * _Binary Translation_: Translation made between _privilege calls_ from guestVMs into HyperV. The HyperV intercepts all Guests' _privilege calls_ and makes the translation via software.   
+    * _Para-Virtualization_: Only works on a small part of OS that can be modified (i.e. Linux). _Privileged Calls_ are modified onto being **HyperCalls**. To achieve this behaviour the source code needs to be modified specifically to the hyperVisor who'll be managing the Guest VMs.  
+       * This solution made HyperVisors **ALMOST** virtualization Aware, but there were still software processes.  
+    * _Hardware Assisted Virtualization_: Virtualization up to the level of HW. The CPU itself knows there are Virtualization.  
+       * The CPU traps guest calls into a specific "place" which it is expecting. At a higher level everything is the same; guest VMs still think they're real. The CPU is the one that catches and sends the _privileged calls_ into the HyperVisor and he's the one sending the info into the kernel. The problem with this solution was all I/O proceses (writing/reading and network traffic) where still pretty demanding to the CPU.  
+    * _SingleRoute I/O Virtualization_ (SR-IOV) - All devices (including network cards, disks) are aware of virtualization. Allows for example the network card to pressent itself as new diff cards. on AWS it is called **_Enhanced Networking_**.  
