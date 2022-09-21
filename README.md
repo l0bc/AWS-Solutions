@@ -972,3 +972,43 @@ Features:
     * _Hardware Assisted Virtualization_: Virtualization up to the level of HW. The CPU itself knows there are Virtualization.  
        * The CPU traps guest calls into a specific "place" which it is expecting. At a higher level everything is the same; guest VMs still think they're real. The CPU is the one that catches and sends the _privileged calls_ into the HyperVisor and he's the one sending the info into the kernel. The problem with this solution was all I/O proceses (writing/reading and network traffic) where still pretty demanding to the CPU.  
     * _SingleRoute I/O Virtualization_ (SR-IOV) - All devices (including network cards, disks) are aware of virtualization. Allows for example the network card to pressent itself as new diff cards. on AWS it is called **_Enhanced Networking_**.  
+ ## EC2 Architecture  
+ * Virtual Machine [OS + Resources].  
+ * They're run on EC2 Hosts; Physical Hardware managed by AWS.  
+    * _Shared Hosts_: You pay for only the instance used on a HW that other AWS Accounts will also use. You have no access to the host or any other instance that doesn't belong to you.  
+       * Ways an EC2 might change HW when on _Shared Host_.  
+          1. Host is pout on maintenance by AWS.  
+          2. EC2 instance is stopped & started (different from a reboot).  
+             * A reboot will not change Host.  
+    * _Dedicated Hosts_: Pay entire host and is not shared with no other AWS Account but you. You're paying the entire host instead of only the instance.  
+ * AZ Resilient. - **They only RUN on 1 AZ!**  
+    *If AZ fails, Host fails, Instance Fails...  
+ * _Storage on EC2_  
+    * _Instanec Store_: Local Storage attached to the EC2, if the _Instance Store_ is detached & attached to another instance, the data will be  **LOST**.  
+    * _Elastic Block Storage: They also are **AZ Resilient**. Only instances in the same AZ can have access to this. This service lets you attach volumes who are also limited to the AZ.  
+ * **What's EC2 good for?**  
+    * Traditional OS+Applicatoin compute.  
+    * Long-Running Compute; there are services who'll be limited when staying always running. EC2 is the answer.  
+    * _Server style applications_: An application who always listening  for incoming connections.  
+    * Applications who needs _burst_ or _steady-state_ load.  
+    * _Monolithic_ application stacks  
+      * Single-tier application (evey component (DB, HTTP HOST, ...) are assembeled.  
+   * _Migrated_ application workloads or _Disaster Recovery_.  
+## EC2 Instance Types  
+The biggest difference will be the _Raw_ Ammounts - CPU, MEM, Local Storage Capacity & Type.  
+Also the _Resource Ratios_.  
+   * Having bigger CPU but less MEM or viceversa...  
+It'll influence System Architecture / Vendor - x64, arm64...  
+There exist 5 main categories:  
+* _General Purpose_ - Default - Diverse worloads, equal resource ratio.  
+* _Compute Optimized - Media processing, HighPerformnceComputing (HPC), Scientific Modelling, gaming, Machine Learning.  
+   * Offer latest high performance CPUs.  
+   * Ratio is generally more charged into CPUs than memory.  
+* _Memory Optimized_ - Imbberce of Compute, Processing large in-memory datasets, some database workloads.  
+* _Accelerated Computing_ - Hardware dedicated GPU, field programable gate arrays (FPGAs) (This is like MicroProcessors I used in the HW class. Piece of hw supper customizable in a HW base level).  
+* _Storage Optimized_ - Sequential and Random I/O, Scale-out transactional DBs, data warehousing, ElasticSearch, Analytics Workloads.  
+### Decoding EC2 Types  
+i.e. **_R5dn.8xlarge_** <- Instance Type.  
+![Instance Type](https://user-images.githubusercontent.com/31637504/191413756-c595ea35-bc31-48ac-baed-2de085a7d30d.png)  
+
+   
