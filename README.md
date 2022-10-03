@@ -1010,5 +1010,73 @@ There exist 5 main categories:
 ### Decoding EC2 Types  
 i.e. **_R5dn.8xlarge_** <- Instance Type.  
 ![Instance Type](https://user-images.githubusercontent.com/31637504/191413756-c595ea35-bc31-48ac-baed-2de085a7d30d.png)  
-
-   
+## Storage.  
+### Storage Performance  
+These 3 cannot exist in assolation, when the exist the 3 of them are present.  
+* _I/O [Block] Size_ - Size of the wheels.  
+* _I/O Operations per Second [IOPS]_ - Speed of the enginge of a car.  
+* _Throughput_ - The max speed.  
+The RPMs of an engine (power) is delivered to the wheels, depending on the size of the wheels you either can go faster or slower.  
+   * I/O Size x IOPS = Throughput.  
+### Elastic Block Store [EBS]  
+_Block Storage_: Storage that can be addressed using **blockIds**. I takes raw physical disks and presents an allocation of those physical disks called **VOLUME**. 
+* Volumes are RW using a block number on that volume. 
+* Can be _encrypted_ using _KMS_.  
+Instances see _block Devices_ and can create _FileSystems_ on the device [ext3,4,xfs].  
+* Storage is *AZ RESILIENT.*  
+EBS volumes can be attached to only 1 ec2 instance (or other service) over a storage network.  
+   * Can be _detached_ & _reattached_, not linked to lifecyle of 1 instance.  [persistent]  
+   * _Snapshots_ can be created and are saved into _*s3*_. This feature let you migrate info/volumes between AZs.  
+      * When doing it you'll be creating a new disk on the new AZ based on the _Snapshot_.  
+Can provision differente, types sizes & performace profiles:  
+   * SSD  
+   * SSD High-Performance  
+   * etc.  
+Billing = based on GB/month (in some cases _performance_ too).  
+### EBS Volume Types  
+#### General Purpose SSD  
+**GP2** [first iteration ].  
+Categories of the **GP2** ssd disk are as follows:  
+* Volume size varies from 1 GB - 16 TB.  
+* I/O opperations:  
+   * The architecture is based on _**Credits**_, more specifically, it's created with a finite Credit allocation. Thinking of it as a _bucket_.The bucket is being refilled of credits periodically on a fixed rate depending on its size.  
+      * AN I/O Credit - 16 KB. Assuming then an IOP is 1 operation of a chunk of 16KB per second.  
+      * 1 IOPS = 1 Credit  
+      * 1 I/O 'bucket' has a capaticy of _5.4 million_ Credits.  
+      * Fills at rate of _BaselinePerformance_  
+         * By minimum (ignoring volume size) the refilling is 100 I/O Credits per second (Cps). 
+         * Beyond the this 100Cps the volume gets refilled 3 Cps per GB of volume size = _Baseline Performance_.  
+      * Has a maximum of 3k IOPS by _depleting_ the bucket.  
+         * 39 minutes @ 3k IOPS will completely deplete the bucket _if it wasn't being refilled_.  
+            * GREAT for _boots_ and _initial workloads_.  
+   * When volumes are larger than 1TB the arch changes. 
+      * I/O Credits are not longer used.  
+      * Volumes always _achieve Baseline_.  
+      * max of 16k IPOS per second.  
+ **GP3**  
+ Is also SSD based but the credit Architecture is not longer present. Can be thinked about as being the _KID_ of **_GP2 & IO1_**. The new arch is:  
+ * 3k IOPS at 125MiB/s - STANDARD  
+    * Can be increased up to 16k IOPS or 1k MiB/s
+ * GP3 is 20% cheaper thant GP2.  
+ * _Throughput_ is 4x faster than GP2.  
+    * 1k MiB/s vs 250 MiB/s.  
+ #### Provisioned IOPS SSD [ io1/2 ]  
+ Storage much more faster and _Consistent_ on low latency & jitter. The IOPS can be _independently_ of Size*.  
+ Some stats:  
+ * IO1/2:  
+    * up to 64k IOPS per volume (being 4x GP2/3)  
+    * up to 1k MB/s throughput.  
+    * Size goes from 4GB - 16TB.  
+    * \*io1 max of 50IOPS/GB.  
+    * \*io2 max of 500IOPS/GB.  
+ * IO2 BlockExpress:  
+    * 256k IPOS per volume.  
+    * 4k MB/s throughput.  
+    * Size goes from 4GB - 64TB.  
+    *  \*BlockExpress max of 1000IOPS/GB
+ There is also another constraint - **Per instance Perfomance Limit**  
+ To arrive to this limit you'll need more than 1 volume at highest levels. The values are:  
+    * io1 - 260k IOPS & 7.5k MB/s  
+    * io2 - 160k IOPS & 4.75k MB/s  
+    * BlockExpress - 260k IOPS & 7.k MB/s  
+    
