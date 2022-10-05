@@ -1079,4 +1079,38 @@ Categories of the **GP2** ssd disk are as follows:
     * io1 - 260k IOPS & 7.5k MB/s  
     * io2 - 160k IOPS & 4.75k MB/s  
     * BlockExpress - 260k IOPS & 7.k MB/s  
-    
+ ### EBS - HDD-based  
+ There are 2 types:  
+ * st1 - Fast HDD, but not very agile. Mainly created when **Frequen Access** is required but cost is a concern.  
+    * Cheap.  
+    * Good for data written/read in sequential ways. Not for random Access.  
+       * _Throughport_ & economy is more important than _IOPS_.  
+    * from 125GB - 16 TB.  
+    * Max of 500 IOPS.  
+       * 1 IOPS = 1MB.  
+    * Velocities:  
+       * 40 MB/s per TB _BASE_.  
+       * 250 MB/s per TB _BURST_.  
+    * Best Implementations:  
+       * bigData.  
+       * dataWarehouse.  
+       * logProcessing.  
+ * sc1 - cold HDD, slow... When only saving but retrieving data is not the main goal.  
+    * Cheaper.  
+    * Design for **infriquent** access.  
+    * from 125GB - 16TB.  
+    * Max of 250 MB/s.  
+    * Velocity:  
+       * 12 MB/s per TB _BASE_.  
+       * 80 MB/s per TB _BURST_.  
+ ### Instance Store Volumes.  
+ **Block Storage Devices**. Used to be local storage. PHYSICAL connected to EC2 hosts.  
+ * Highest storage performance in AWS ( due to being local).  
+    * D3 instance = 4.6 GB/s throughput.  
+    * I3 instance = 16 GB/s sequential throughput.  
+    * **IN GENERAL IOPS & THROUPUT > EBS**.  
+ * Price is included in instance Price.  
+ * **ATACHED AT LAUNCH**.  
+ * To be noted; **instance** != **hosts**. When terminated and restarted, _Instance_ will be in new host (almost always).  
+ * **_EPHIMERAL_** volumes !!!  
+  
