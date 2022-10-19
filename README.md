@@ -1113,4 +1113,49 @@ Categories of the **GP2** ssd disk are as follows:
  * **ATACHED AT LAUNCH**.  
  * To be noted; **instance** != **hosts**. When terminated and restarted, _Instance_ will be in new host (almost always).  
  * **_EPHIMERAL_** volumes !!!  
-  
+ ### Instance Store vs EBS [ when? ]  
+ * **_EBS_**  
+    * When needing **PERSISTANCE** default to _**EBS**_ 
+    * **RESILIENCE** default to EBS.  
+    * Storage isolated from instance _Lifecycle_.  
+    * _Cost Efficacy_  
+       * **CHEAPER** = ST1 | SC1  
+       * **THROUGHPUT | STREAMING** = ST1  
+       * When **BOOT** is needed != ST1 | SC1  
+       * 16k IOPS = **GP2/3**  
+       * 64k IOPS = **IO1/2** [can achieve up to 256k on new special disk]  
+       * 260k IOPS = **RAID0 + EBS**.  
+       * Needing more IOPS?  
+          * **INSTANCE STORE**...  
+ * **_Instance Store_**  
+    * When _Super high performance_ is required.  
+    * When _costs_ are a concern (this storage is almost always included in the Instance's price).  
+    * When needing more than 260k IOPS use _Instance Store_.  
+ * **DEPENDS...**  
+    * Resiliance with App _in-built Replication_  
+       * Choosing a lot of Instance Stores could be a solution when prioritizing high Performance & achieving Resilience due to the quantity of _Instance Stores_ and its replications.  
+ ### EBS Snapshots  
+ The snapshots [ backups... ] are stored in s3 Buckets. Keep in mind, snapshots are susceptible to data loss if Region is affected.  
+ * When using snapshots _Resilience_ is augmented to Region wide (instead of AZ).  
+ * 1st Snapshot is a **Full Copy** of 'data' on the volume.  
+    * It will ONLY copy the _data_ (if a 40GB disk has 5GB of data stored, the snapshot will only copy the data ( that'll mean that the partition architecture will no be copied but I'm not sure).  
+ * Future snaps are _incremental_.  
+    * New snapshots will save only thw new data making it much faster.  
+       * AWS is intelligent enough to make each snapshot _self sufficient_ in case one snapshot along the way gets corrupted.  
+ * Snapshots are great to _clone_ a volume.  
+    * A usage is when wanting to copy Volumes between AZ and Regions.  
+ #### Performance on EBS Snapshots/Volume  
+ * A new EBS volume will have _full performance immediately_  
+ * **Snaps restre lazily**  
+    * Fetching is gradual.  
+       * Requested blocks are fetched immediately but the first time will be accesed from s3 ( making it much slower ).  
+    * Can force the fetching by reading all blocks on the volume ( snapshot...) by using the linux tool _**dd**_.  
+    * _Fast Snapshot Restore_ [**FSR**] is an alternative to dd.  
+       * Costs higher.  
+       * has a 50 FSR limit.  
+          * 1 _Snapshot_ + the _AZ_ used = 1 FSR. [ take this in mind when for example choosing 1 Snapshot but maybe 4 AZs.  
+ #### Consumption and Billing  
+ * Billed by Gigabyte/month.  
+ * Bills **used** data, NOT allocated data.  
+ * ![image](https://user-images.githubusercontent.com/31637504/196597676-7e2b3b72-0f65-400a-870e-21cb242b1d66.png)  
+ 
